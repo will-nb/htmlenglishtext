@@ -28,7 +28,7 @@ import (
     "fmt"
     "io/ioutil"
     "os"
-    "github.com/will-nb/htmlenglishtext"
+    "github.com/will-nb/htmlenglishtext/pkg/htmlenglishtext"
 )
 
 func main() {

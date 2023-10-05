@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/will-nb/htmlenglishtext/pkg/filter"
+	"github.com/will-nb/htmlenglishtext/pkg/htmlenglishtext"
 )
 
 func saveJSONFile(filename string, data interface{}) error {
@@ -37,7 +37,7 @@ func main() {
 	filename := args[0]
 
 	// 读取 HTML 文件并提取其中的英文单词
-	englishText := filter.EnglishText{}
+	englishText := htmlenglishtext.EnglishText{}
 	err := englishText.ReadFile(filename)
 	if err != nil {
 		fmt.Println(err)

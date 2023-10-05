@@ -1,9 +1,10 @@
-package filter
+package htmlenglishtext
 
 import (
 	"os"
 	"regexp"
 	"strings"
+	"unicode"
 )
 
 // EnglishText是一个结构体，包含要过滤的文本。
@@ -77,11 +78,11 @@ func (f *EnglishText) GetSentences() []string {
 // 本函数会过滤所有罗马数字。
 // 把文本分解为单词
 func (f *EnglishText) ExtractWords() error {
-	re := regexp.MustCompile("[^a-zA-Z0-9'-]+|\\b[IVXLCDM]+\\b")
+	re := regexp.MustCompile("[^a-zA-Z'-]+|\\b[IVXLCDM]+\\b")
 	words := re.Split(f.text, -1)
 	var filteredWords []string
 	for _, word := range words {
-		if len(word) >= 3 {
+		if len(word) >= 3 && !unicode.IsDigit([]rune(word)[0]) {
 			if strings.ToUpper(word) == word {
 				filteredWords = append(filteredWords, word)
 			} else {

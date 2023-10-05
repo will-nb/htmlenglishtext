@@ -1,7 +1,7 @@
 package filter
 
 import (
-	"io/ioutil"
+	"os"
 	"regexp"
 	"strings"
 )
@@ -17,7 +17,7 @@ type EnglishText struct {
 
 // ReadFile 读取文件内容并设置 EnglishText 结构体的 html 字段。
 func (f *EnglishText) ReadFile(filePath string) error {
-	content, err := ioutil.ReadFile(filePath)
+	content, err := os.ReadFile(filePath)
 	if err != nil {
 		return err
 	}
@@ -55,8 +55,14 @@ func (f *EnglishText) GetText() string {
 
 // 把文本分解为句子
 func (f *EnglishText) ExtractSentences() error {
-	re := regexp.MustCompile("[.?!][ ]+(?=[A-Z])")
-	f.sentences = re.Split(f.text, -1)
+	re := regexp.MustCompile(`\b[A-Z][^.\n?!]*[.?!]`)
+	f.sentences = re.FindAllString(f.text, -1)
+	for i := 0; i < len(f.sentences); i++ {
+		if !strings.Contains(f.sentences[i], " ") {
+			f.sentences = append(f.sentences[:i], f.sentences[i+1:]...)
+			i--
+		}
+	}
 	return nil
 }
 

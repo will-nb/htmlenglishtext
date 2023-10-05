@@ -9,6 +9,23 @@ import (
 	"github.com/will-nb/htmlenglishtext/pkg/filter"
 )
 
+func saveJSONFile(filename string, data interface{}) error {
+	jsonData, err := json.MarshalIndent(data, "", "  ")
+	if err != nil {
+		return err
+	}
+	jsonFile, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	defer jsonFile.Close()
+	_, err = jsonFile.Write(jsonData)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func main() {
 	// 读取命令行参数中的文件名
 	flag.Parse()
@@ -31,6 +48,11 @@ func main() {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+	err = englishText.ExtractSentences()
+	if err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
 	err = englishText.ExtractWords()
 	if err != nil {
 		fmt.Println(err)
@@ -43,20 +65,17 @@ func main() {
 	}
 
 	// 将提取的 uniqueWords 保存成一个 json 文件
-	jsonData, err := json.MarshalIndent(englishText.GetUniqueWords(), "", "  ")
+	err = saveJSONFile("unique_words.json", englishText.GetUniqueWords())
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	jsonFile, err := os.Create("unique_words.json")
+
+	// 将 sentence 保存成一个 json 文件
+	err = saveJSONFile("sentence.json", englishText.GetSentences())
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
-	defer jsonFile.Close()
-	_, err = jsonFile.Write(jsonData)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
-	}
+
 }

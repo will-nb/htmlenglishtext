@@ -97,7 +97,7 @@ func (f *EnglishText) GetSentences() []string {
 //
 //	error: 如果提取单词时出现错误，则返回相应的错误信息。
 func (f *EnglishText) ExtractWords() error {
-	re := regexp.MustCompile("[^a-zA-Z'-]+|\\b[IVXLCDM]+\\b")
+	re := regexp.MustCompile("[^a-zA-Z-]+|\\b[IVXLCDM]+\\b")
 	words := re.Split(f.text, -1)
 	var filteredWords []string
 	for _, word := range words {
